@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient I/O Tracker - Demo</title>
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #patient-io-tracker {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        /* Header */
+        .pio-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .pio-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* Category Groups */
+        .pio-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .pio-category-group {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pio-group-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .pio-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .pio-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .pio-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pio-btn-intake {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
+
+        .pio-btn-intake:hover {
+            background: #bfdbfe;
+            border-color: #60a5fa;
+        }
+
+        .pio-btn-output {
+            background: #fef3c7;
+            border-color: #fcd34d;
+        }
+
+        .pio-btn-output:hover {
+            background: #fde68a;
+            border-color: #fbbf24;
+        }
+
+        .pio-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .pio-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* Date Tabs */
+        .pio-date-tabs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pio-date-nav {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .pio-date-nav:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .pio-date-list {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .pio-date-tab {
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .pio-date-tab:hover {
+            background: #f1f5f9;
+        }
+
+        .pio-date-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* Records */
+        .pio-records {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pio-records-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .pio-records-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pio-record-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            gap: 12px;
+        }
+
+        .pio-record-item.intake {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .pio-record-item.output {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .pio-record-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            min-width: 50px;
+        }
+
+        .pio-record-icon {
+            font-size: 24px;
+        }
+
+        .pio-record-info {
+            flex: 1;
+        }
+
+        .pio-record-category {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .pio-record-amount {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .pio-record-memo {
+            font-size: 12px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .pio-record-delete {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #fee2e2;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #ef4444;
+            font-size: 16px;
+        }
+
+        .pio-record-delete:hover {
+            background: #fecaca;
+        }
+
+        /* Summary */
+        .pio-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pio-summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .pio-summary-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .pio-summary-item {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .pio-summary-intake {
+            background: #dbeafe;
+        }
+
+        .pio-summary-output {
+            background: #fef3c7;
+        }
+
+        .pio-summary-balance {
+            background: #dcfce7;
+        }
+
+        .pio-summary-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .pio-summary-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        /* Modal */
+        .pio-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+        }
+
+        .pio-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pio-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .pio-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .pio-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .pio-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .pio-modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #64748b;
+        }
+
+        .pio-form-group {
+            margin-bottom: 16px;
+        }
+
+        .pio-form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .pio-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .pio-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .pio-input-group {
+            display: flex;
+        }
+
+        .pio-input-group .pio-input {
+            border-radius: 8px 0 0 8px;
+            flex: 1;
+        }
+
+        .pio-input-unit {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .pio-quick-amounts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pio-quick-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .pio-quick-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .pio-form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .pio-btn-cancel,
+        .pio-btn-save {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .pio-btn-cancel {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .pio-btn-save {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .pio-btn-save:hover {
+            background: #2563eb;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            #patient-io-tracker {
+                border-radius: 0;
+            }
+            .pio-summary-content {
+                grid-template-columns: 1fr;
+            }
+            .pio-summary-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="patient-io-tracker">
+        <!-- Header -->
+        <div class="pio-header">
+            <h2 class="pio-title">환자 I/O 관리</h2>
+        </div>
+
+        <!-- Category Buttons -->
+        <div class="pio-categories">
+            <!-- Intake -->
+            <div class="pio-category-group">
+                <h3 class="pio-group-title">섭취량 (Intake)</h3>
+                <div class="pio-buttons">
+                    <button class="pio-btn pio-btn-intake" onclick="openModal('intake', 'water', '물', '💧', 'ml')">
+                        <span class="pio-icon">💧</span>
+                        <span class="pio-label">물</span>
+                    </button>
+                    <button class="pio-btn pio-btn-intake" onclick="openModal('intake', 'meal', '식사', '🍚', 'g')">
+                        <span class="pio-icon">🍚</span>
+                        <span class="pio-label">식사</span>
+                    </button>
+                    <button class="pio-btn pio-btn-intake" onclick="openModal('intake', 'medicine', '약', '💊', '정')">
+                        <span class="pio-icon">💊</span>
+                        <span class="pio-label">약</span>
+                    </button>
+                    <button class="pio-btn pio-btn-intake" onclick="openModal('intake', 'beverage', '음료', '🥤', 'ml')">
+                        <span class="pio-icon">🥤</span>
+                        <span class="pio-label">음료</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="pio-category-group">
+                <h3 class="pio-group-title">배설량 (Output)</h3>
+                <div class="pio-buttons">
+                    <button class="pio-btn pio-btn-output" onclick="openModal('output', 'urine', '소변', '🚽', 'ml')">
+                        <span class="pio-icon">🚽</span>
+                        <span class="pio-label">소변</span>
+                    </button>
+                    <button class="pio-btn pio-btn-output" onclick="openModal('output', 'stool', '대변', '💩', '회')">
+                        <span class="pio-icon">💩</span>
+                        <span class="pio-label">대변</span>
+                    </button>
+                    <button class="pio-btn pio-btn-output" onclick="openModal('output', 'diarrhea', '설사', '💨', '회')">
+                        <span class="pio-icon">💨</span>
+                        <span class="pio-label">설사</span>
+                    </button>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Tabs -->
+        <div class="pio-date-tabs">
+            <button class="pio-date-nav">&lt;</button>
+            <div class="pio-date-list">
+                <button class="pio-date-tab">1/5</button>
+                <button class="pio-date-tab">1/6</button>
+                <button class="pio-date-tab">1/7</button>
+                <button class="pio-date-tab">1/8</button>
+                <button class="pio-date-tab">1/9</button>
+                <button class="pio-date-tab">1/10</button>
+                <button class="pio-date-tab active">오늘</button>
+            </div>
+            <button class="pio-date-nav">&gt;</button>
+        </div>
+
+        <!-- Records List -->
+        <div class="pio-records">
+            <h3 class="pio-records-title">오늘의 기록</h3>
+            <div class="pio-records-list">
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">07:00</span>
+                    <span class="pio-record-icon">💧</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">물</div>
+                        <div class="pio-record-amount">200 ml</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">08:00</span>
+                    <span class="pio-record-icon">🍚</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">식사</div>
+                        <div class="pio-record-amount">300 g</div>
+                        <div class="pio-record-memo">아침 죽</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">08:30</span>
+                    <span class="pio-record-icon">💊</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">약</div>
+                        <div class="pio-record-amount">2 정</div>
+                        <div class="pio-record-memo">혈압약</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item output">
+                    <span class="pio-record-time">09:15</span>
+                    <span class="pio-record-icon">🚽</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">소변</div>
+                        <div class="pio-record-amount">350 ml</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">10:00</span>
+                    <span class="pio-record-icon">🥤</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">음료</div>
+                        <div class="pio-record-amount">150 ml</div>
+                        <div class="pio-record-memo">오렌지 주스</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item output">
+                    <span class="pio-record-time">11:30</span>
+                    <span class="pio-record-icon">💩</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">대변</div>
+                        <div class="pio-record-amount">1 회</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">12:00</span>
+                    <span class="pio-record-icon">🍚</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">식사</div>
+                        <div class="pio-record-amount">400 g</div>
+                        <div class="pio-record-memo">점심 식사</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item intake">
+                    <span class="pio-record-time">14:00</span>
+                    <span class="pio-record-icon">💧</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">물</div>
+                        <div class="pio-record-amount">250 ml</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+                <div class="pio-record-item output">
+                    <span class="pio-record-time">15:00</span>
+                    <span class="pio-record-icon">🚽</span>
+                    <div class="pio-record-info">
+                        <div class="pio-record-category">소변</div>
+                        <div class="pio-record-amount">400 ml</div>
+                    </div>
+                    <button class="pio-record-delete">×</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="pio-summary">
+            <h3 class="pio-summary-title">일일 요약</h3>
+            <div class="pio-summary-content">
+                <div class="pio-summary-item pio-summary-intake">
+                    <span class="pio-summary-label">섭취량</span>
+                    <span class="pio-summary-value">600 ml</span>
+                </div>
+                <div class="pio-summary-item pio-summary-output">
+                    <span class="pio-summary-label">배설량</span>
+                    <span class="pio-summary-value">750 ml</span>
+                </div>
+                <div class="pio-summary-item pio-summary-balance">
+                    <span class="pio-summary-label">밸런스</span>
+                    <span class="pio-summary-value">-150 ml</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="pio-modal" id="pio-modal">
+        <div class="pio-modal-overlay" onclick="closeModal()"></div>
+        <div class="pio-modal-content">
+            <div class="pio-modal-header">
+                <h3 class="pio-modal-title">기록 입력</h3>
+                <button class="pio-modal-close" onclick="closeModal()">×</button>
+            </div>
+            <form onsubmit="saveRecord(event)">
+                <div class="pio-form-group">
+                    <label class="pio-form-label">
+                        <span id="modal-icon" style="font-size: 24px; margin-right: 8px;">💧</span>
+                        <span id="modal-label">물</span>
+                    </label>
+                </div>
+
+                <div class="pio-form-group">
+                    <label class="pio-form-label">양</label>
+                    <div class="pio-input-group">
+                        <input type="number" id="amount-input" class="pio-input" value="200" min="0">
+                        <span class="pio-input-unit" id="modal-unit">ml</span>
+                    </div>
+                </div>
+
+                <div class="pio-form-group">
+                    <label class="pio-form-label">빠른 입력</label>
+                    <div class="pio-quick-amounts" id="quick-amounts">
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(50)">50 ml</button>
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(100)">100 ml</button>
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(150)">150 ml</button>
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(200)">200 ml</button>
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(250)">250 ml</button>
+                        <button type="button" class="pio-quick-btn" onclick="setAmount(300)">300 ml</button>
+                    </div>
+                </div>
+
+                <div class="pio-form-group">
+                    <label class="pio-form-label">시간</label>
+                    <input type="datetime-local" class="pio-input" id="time-input">
+                </div>
+
+                <div class="pio-form-group">
+                    <label class="pio-form-label">메모 (선택)</label>
+                    <textarea class="pio-input" rows="2" placeholder="메모를 입력하세요..."></textarea>
+                </div>
+
+                <div class="pio-form-actions">
+                    <button type="button" class="pio-btn-cancel" onclick="closeModal()">취소</button>
+                    <button type="submit" class="pio-btn-save">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set current time
+        document.getElementById('time-input').value = new Date().toISOString().slice(0, 16);
+
+        function openModal(type, category, label, icon, unit) {
+            document.getElementById('modal-icon').textContent = icon;
+            document.getElementById('modal-label').textContent = label;
+            document.getElementById('modal-unit').textContent = unit;
+
+            // Update quick amounts
+            const quickAmounts = document.getElementById('quick-amounts');
+            let amounts = [];
+            if (unit === 'ml') {
+                amounts = [50, 100, 150, 200, 250, 300, 500];
+            } else if (unit === 'g') {
+                amounts = [100, 200, 300, 400, 500];
+            } else {
+                amounts = [1, 2, 3];
+            }
+
+            quickAmounts.innerHTML = amounts.map(a =>
+                `<button type="button" class="pio-quick-btn" onclick="setAmount(${a})">${a} ${unit}</button>`
+            ).join('');
+
+            document.getElementById('pio-modal').classList.add('active');
+            document.getElementById('amount-input').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('pio-modal').classList.remove('active');
+        }
+
+        function setAmount(value) {
+            document.getElementById('amount-input').value = value;
+        }
+
+        function saveRecord(e) {
+            e.preventDefault();
+            alert('저장되었습니다! (데모)');
+            closeModal();
+        }
+    </script>
+</body>
+</html>
