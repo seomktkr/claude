@@ -1,0 +1,595 @@
+/**
+ * Patient I/O Tracker Styles
+ */
+
+/* Reset & Base */
+#patient-io-tracker {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    box-sizing: border-box;
+}
+
+#patient-io-tracker *,
+#patient-io-tracker *::before,
+#patient-io-tracker *::after {
+    box-sizing: border-box;
+}
+
+/* Header */
+.pio-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pio-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* Category Groups */
+.pio-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.pio-category-group {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pio-group-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Buttons */
+.pio-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.pio-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: #f1f5f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pio-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pio-btn:active {
+    transform: translateY(0);
+}
+
+.pio-btn-intake {
+    background: #dbeafe;
+    border-color: #93c5fd;
+}
+
+.pio-btn-intake:hover {
+    background: #bfdbfe;
+    border-color: #60a5fa;
+}
+
+.pio-btn-output {
+    background: #fef3c7;
+    border-color: #fcd34d;
+}
+
+.pio-btn-output:hover {
+    background: #fde68a;
+    border-color: #fbbf24;
+}
+
+.pio-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.pio-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Date Tabs */
+.pio-date-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pio-date-nav {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.pio-date-nav:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.pio-date-list {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.pio-date-list::-webkit-scrollbar {
+    display: none;
+}
+
+.pio-date-tab {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.pio-date-tab:hover {
+    background: #f1f5f9;
+}
+
+.pio-date-tab.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.pio-date-tab.today {
+    font-weight: 700;
+}
+
+/* Records */
+.pio-records {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pio-records-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 12px 0;
+}
+
+.pio-records-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pio-record-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    gap: 12px;
+}
+
+.pio-record-item.intake {
+    border-left: 4px solid #3b82f6;
+}
+
+.pio-record-item.output {
+    border-left: 4px solid #f59e0b;
+}
+
+.pio-record-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    min-width: 50px;
+}
+
+.pio-record-icon {
+    font-size: 24px;
+}
+
+.pio-record-info {
+    flex: 1;
+}
+
+.pio-record-category {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+.pio-record-amount {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.pio-record-memo {
+    font-size: 12px;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+.pio-record-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #fee2e2;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #ef4444;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.pio-record-delete:hover {
+    background: #fecaca;
+}
+
+.pio-no-records {
+    text-align: center;
+    color: #94a3b8;
+    padding: 24px;
+    font-size: 14px;
+}
+
+/* Summary */
+.pio-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pio-summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 12px 0;
+}
+
+.pio-summary-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.pio-summary-item {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.pio-summary-intake {
+    background: #dbeafe;
+}
+
+.pio-summary-output {
+    background: #fef3c7;
+}
+
+.pio-summary-balance {
+    background: #dcfce7;
+}
+
+.pio-summary-balance.negative {
+    background: #fee2e2;
+}
+
+.pio-summary-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.pio-summary-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Modal */
+.pio-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.pio-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pio-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.pio-modal-content {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.pio-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pio-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.pio-modal-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #f1f5f9;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #64748b;
+}
+
+.pio-modal-close:hover {
+    background: #e2e8f0;
+}
+
+/* Form */
+.pio-form-group {
+    margin-bottom: 16px;
+}
+
+.pio-form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.pio-form-label .pio-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+
+.pio-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+}
+
+.pio-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.pio-input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.pio-input-group .pio-input {
+    border-radius: 8px 0 0 8px;
+    flex: 1;
+}
+
+.pio-input-unit {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: #f1f5f9;
+    border: 2px solid #e2e8f0;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.pio-textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* Quick Amounts */
+.pio-quick-amounts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pio-quick-btn {
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.pio-quick-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Form Actions */
+.pio-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pio-btn-cancel,
+.pio-btn-save {
+    flex: 1;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pio-btn-cancel {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.pio-btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+.pio-btn-save {
+    background: #3b82f6;
+    color: white;
+}
+
+.pio-btn-save:hover {
+    background: #2563eb;
+}
+
+/* Loading */
+.pio-loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.pio-loading.active {
+    display: flex;
+}
+
+.pio-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: pio-spin 1s linear infinite;
+}
+
+@keyframes pio-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    #patient-io-tracker {
+        padding: 12px;
+        border-radius: 0;
+    }
+
+    .pio-buttons {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+    }
+
+    .pio-btn {
+        padding: 10px 6px;
+    }
+
+    .pio-icon {
+        font-size: 24px;
+    }
+
+    .pio-label {
+        font-size: 11px;
+    }
+
+    .pio-summary-content {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .pio-summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
